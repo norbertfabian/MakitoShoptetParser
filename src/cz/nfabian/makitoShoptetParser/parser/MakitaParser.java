@@ -9,6 +9,7 @@ import cz.nfabian.makitoShoptetParser.entity.paramters.Property;
 import cz.nfabian.makitoShoptetParser.enumeration.Element;
 import org.xml.sax.Attributes;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 /**
@@ -43,7 +44,8 @@ public class MakitaParser extends ParserTemplate {
             itemDetailElementGroup.setCode(value.toString());
             inElement = false;
         } else if (qName.equals(Element.EAN)) {
-            itemDetailElementGroup.setEan(value.toString());
+            itemDetailElementGroup.setEan(
+                    value.toString().substring(0, value.toString().length() > 12 ? 12 : value.toString().length()));
             inElement = false;
         } else if (qName.equals(Element.PRODUCT)) {
             itemBasic.setName(value.toString());
@@ -61,9 +63,9 @@ public class MakitaParser extends ParserTemplate {
         } else if (qName.equals(Element.IMGURL_ALTERNATIVE)) {
             itemBasic.getImages().add(value.toString());
         } else if (qName.equals(Element.RECOMMENDED_PRICE_VAT)) {
-            itemDetailElementGroup.setPriceVat(value.toString());
+            itemDetailElementGroup.setPriceVat(String.format("%.02f", Float.valueOf(value.toString())));
         } else if (qName.equals(Element.VAT)) {
-            itemDetailElementGroup.setVat(value.toString());
+            itemDetailElementGroup.setVat(value.toString().substring(0, value.toString().indexOf('.')));
         } else if (qName.equals(Element.ONSTOCK)) {
             itemDetailElementGroup.setAvailability(value.toString());
         } else if (qName.equals(Element.UNITS)) {

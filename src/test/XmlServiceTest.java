@@ -68,6 +68,15 @@ public class XmlServiceTest {
 
         xmlService.readItemsFromXml(sourceFile, parser);
         xmlService.writeItemsToXml(parser.getItems(), destinationFile);
+
+        SchemaFactory factory = new XMLSyntaxSchemaFactory();
+        Schema schema = factory.newSchema(new File("products-supplier-v10.rng"));
+        Validator validator = schema.newValidator();
+
+        validator.validate(new StreamSource(destinationFile));
+
+        File file = new File(destinationFile);
+        file.delete();
     }
 
     private static ArrayList<Item> createItems() {
